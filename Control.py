@@ -37,7 +37,7 @@ pwm_b.start(0)
 
 class PiCar:
     def __init__(self):
-        self.speed = 50
+        self.speed = 1
 
     def forward(self, speed = None):
         if speed is not None:
@@ -66,25 +66,25 @@ class PiCar:
         pwm_b.ChangeDutyCycle(self.speed)
 
 
-    def turn_left(self, turn_speed = 30):
+    def turn_left(self, turn_speed = 1):
         # Slow down left side, maintain right side
         pwm_a.ChangeDutyCycle(self.speed - turn_speed)
         pwm_b.ChangeDutyCycle(self.speed)
 
-    def turn_right(self, turn_speed = 30):
+    def turn_right(self, turn_speed = 1):
         # Maintian down left side, slow down right side
         pwm_a.ChangeDutyCycle(self.speed)
         pwm_b.ChangeDutyCycle(self.speed - turn_speed)
 
     def change_lane_left(self):
         # Quick left turn then straighten
-        self.turn_left(50)
+        self.turn_left(1)
         time.sleep(0.5)
         self.forward()  # Back to normal
     
     def change_lane_right(self):
         # Quick right turn then straighten
-        self.turn_right(50)
+        self.turn_right(1)
         time.sleep(0.5)
         self.forward()
 
@@ -104,12 +104,12 @@ if __name__ == "__main__":
     car = PiCar()
     try:
         print("Moving forward ...")
-        car.forward(60)
+        car.forward(1)
         time.sleep(2)
         print("Done !!!")
 
         print("Moving backwards")
-        car.backward(50)
+        car.backward(1)
         time.sleep(2)
         print("Done !!!")
 
@@ -133,3 +133,4 @@ if __name__ == "__main__":
     finally:
         car.cleanup()
         print("Clean up done: GPIO Pins are fresh now")
+        car.stop
