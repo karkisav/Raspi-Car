@@ -196,7 +196,7 @@ class PiCar:
 
 # Example usage
 if __name__ == "__main__":
-    car = PiCar(default_speed=70)  # Create car with 70% speed
+    car = PiCar(default_speed=10)  # Create car with 70% speed
     
     try:
         print("Testing PiCar functionality...")
@@ -225,13 +225,13 @@ if __name__ == "__main__":
         car.spin_right()
         time.sleep(2)
         
-        print("Changing to left lane...")
-        car.forward().change_lane_left()
-        time.sleep(1)
+        # print("Changing to left lane...")
+        # car.forward().change_lane_left()
+        # time.sleep(1)
         
-        print("Changing to right lane...")
-        car.forward().change_lane_right()
-        time.sleep(1)
+        # print("Changing to right lane...")
+        # car.forward().change_lane_right()
+        # time.sleep(1)
         
         print("All tests completed!")
         
