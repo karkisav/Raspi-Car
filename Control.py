@@ -64,15 +64,33 @@ class PiCar:
         pwm_b.ChangeDutyCycle(self.speed)
 
 
-    def turn_left(self, turn_speed = 9):
-        # Slow down left side, maintain right side
-        pwm_a.ChangeDutyCycle(self.speed - turn_speed)
-        pwm_b.ChangeDutyCycle(self.speed)
+    def turn_left(self, turn_speed=30):
+    # For left turns, slow down or reverse left motor while keeping right motor forward
+        left_speed = max(0, self.speed - turn_speed)
+        
+        # Keep direction pins the same as in forward
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        
+        # Apply different speeds to each side
+        pwm_a.ChangeDutyCycle(left_speed)  # Left motor slower
+        pwm_b.ChangeDutyCycle(self.speed)  # Right motor normal speed
 
-    def turn_right(self, turn_speed = 9):
-        # Maintian down left side, slow down right side
-        pwm_a.ChangeDutyCycle(self.speed)
-        pwm_b.ChangeDutyCycle(self.speed - turn_speed)
+    def turn_right(self, turn_speed=30):
+        # For right turns, slow down or reverse right motor while keeping left motor forward
+        right_speed = max(0, self.speed - turn_speed)
+        
+        # Keep direction pins the same as in forward
+        GPIO.output(IN1, GPIO.HIGH)
+        GPIO.output(IN2, GPIO.LOW)
+        GPIO.output(IN3, GPIO.HIGH)
+        GPIO.output(IN4, GPIO.LOW)
+        
+        # Apply different speeds to each side
+        pwm_a.ChangeDutyCycle(self.speed)  # Left motor normal speed
+        pwm_b.ChangeDutyCycle(right_speed)  # Right motor slower
 
     def change_lane_left(self):
         # Quick left turn then straighten
