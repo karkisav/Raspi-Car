@@ -297,10 +297,10 @@ def run_test_sequence():
         # Example of command list
         print("\nRunning command list:")
         commands = [
-            {'command': 'forward', 'speed': 100, 'duration': 1},
-            {'command': 'left', 'duration': 1},
+            # {'command': 'forward', 'speed': 100, 'duration': 1},
+            {'command': 'left', 'duration': 0.5},
             # {'command': 'forward', 'speed': 70, 'duration': 1.5},
-            {'command': 'right', 'duration': 1},
+            {'command': 'right', 'duration': 0.5},
             # {'command': 'backward', 'speed': 40, 'duration': 2},
             {'command': 'stop', 'duration': 1}
         ]
