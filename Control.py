@@ -209,13 +209,13 @@ if __name__ == "__main__":
         car.backward()
         time.sleep(2)
         
-        print("Turning left...")
-        car.forward().turn_left(0.6)  # Demonstrating method chaining
-        time.sleep(2)
+        # print("Turning left...")
+        # car.forward().turn_left(0.6)  # Demonstrating method chaining
+        # time.sleep(2)
         
-        print("Turning right...")
-        car.forward().turn_right(0.6)
-        time.sleep(2)
+        # print("Turning right...")
+        # car.forward().turn_right(0.6)
+        # time.sleep(2)
         
         print("Spinning left...")
         car.spin_left()
