@@ -101,15 +101,15 @@ class PiCar:
 if __name__ == "__main__":
     car = PiCar()
     try:
-        print("Moving forward ...")
-        car.forward(1)
-        time.sleep(2)
-        print("Done !!!")
+        # print("Moving forward ...")
+        # car.forward(1)
+        # time.sleep(2)
+        # print("Done !!!")
 
-        print("Moving backwards")
-        car.backward(1)
-        time.sleep(2)
-        print("Done !!!")
+        # print("Moving backwards")
+        # car.backward(1)
+        # time.sleep(2)
+        # print("Done !!!")
 
         print("Turning right ...")
         car.turn_left()
