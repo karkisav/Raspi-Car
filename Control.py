@@ -247,9 +247,9 @@ if __name__ == "__main__":
         # car.backward().turn_right(0.8)
         # time.sleep(2)
         
-        print("Testing spin left...")
-        car.spin_left()
-        time.sleep(2)
+        # print("Testing spin left...")
+        # car.spin_left()
+        # time.sleep(2)
         
         # print("Testing spin right...")
         # car.spin_right()
