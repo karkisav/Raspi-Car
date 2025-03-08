@@ -223,29 +223,29 @@ if __name__ == "__main__":
     try:
         print("Testing PiCar functionality...")
         
-        print("Moving forward...")
-        car.forward()
-        time.sleep(2)
+        # print("Moving forward...")
+        # car.forward()
+        # time.sleep(2)
         
         print("Testing left turn...")
         car.forward().turn_left(0.8)  # Higher turn_factor for sharper turn
         time.sleep(2)
         
-        print("Testing right turn...")
-        car.forward().turn_right(0.8)  # Higher turn_factor for sharper turn
-        time.sleep(2)
+        # print("Testing right turn...")
+        # car.forward().turn_right(0.8)  # Higher turn_factor for sharper turn
+        # time.sleep(2)
         
-        print("Moving backward...")
-        car.backward()
-        time.sleep(2)
+        # print("Moving backward...")
+        # car.backward()
+        # time.sleep(2)
         
-        print("Testing left turn while moving backward...")
-        car.backward().turn_left(0.8)
-        time.sleep(2)
+        # print("Testing left turn while moving backward...")
+        # car.backward().turn_left(0.8)
+        # time.sleep(2)
         
-        print("Testing right turn while moving backward...")
-        car.backward().turn_right(0.8)
-        time.sleep(2)
+        # print("Testing right turn while moving backward...")
+        # car.backward().turn_right(0.8)
+        # time.sleep(2)
         
         print("Testing spin left...")
         car.spin_left()
@@ -255,13 +255,13 @@ if __name__ == "__main__":
         car.spin_right()
         time.sleep(2)
         
-        print("Testing left lane change...")
-        car.forward().change_lane_left(0.9, 1.0)  # Sharper turn, longer duration
-        time.sleep(2)
+        # print("Testing left lane change...")
+        # car.forward().change_lane_left(0.9, 1.0)  # Sharper turn, longer duration
+        # time.sleep(2)
         
-        print("Testing right lane change...")
-        car.forward().change_lane_right(0.9, 1.0)  # Sharper turn, longer duration
-        time.sleep(2)
+        # print("Testing right lane change...")
+        # car.forward().change_lane_right(0.9, 1.0)  # Sharper turn, longer duration
+        # time.sleep(2)
         
         print("All tests completed!")
         
