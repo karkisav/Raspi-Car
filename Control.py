@@ -132,3 +132,5 @@ if __name__ == "__main__":
         car.cleanup()
         print("Clean up done: GPIO Pins are fresh now")
         car.stop
+        pwm_a.start(0)
+        pwm_b.start(0)
