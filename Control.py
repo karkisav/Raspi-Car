@@ -223,9 +223,9 @@ if __name__ == "__main__":
     try:
         print("Testing PiCar functionality...")
         
-        # print("Moving forward...")
-        # car.forward()
-        # time.sleep(2)
+        print("Moving forward...")
+        car.forward()
+        time.sleep(2)
         
         print("Testing left turn...")
         car.forward().turn_left(0.8)  # Higher turn_factor for sharper turn
