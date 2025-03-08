@@ -13,10 +13,14 @@ IN3 = 18  # Direction control
 IN4 = 17  # Direction control
 
 class PiCar:
-    def __init__(self, default_speed=70):
+    def __init__(self, default_speed=70, left_bias=1.0, right_bias=1.0):
         # Initialize with a reasonable default speed (70% duty cycle)
         self.speed = default_speed
         self.running = False
+        
+        # Calibration factors for motors
+        self.left_bias = left_bias
+        self.right_bias = right_bias
         
         # Initialize GPIO
         GPIO.setmode(GPIO.BCM)
@@ -49,14 +53,18 @@ class PiCar:
         GPIO.output(IN4, GPIO.LOW if right_forward else GPIO.HIGH)
     
     def set_motor_speeds(self, left_speed, right_speed):
-        """Set speed for both motors separately"""
+        """Set speed for both motors with calibration applied"""
+        # Apply calibration bias
+        calibrated_left = left_speed * self.left_bias
+        calibrated_right = right_speed * self.right_bias
+        
         # Ensure speeds are within valid range (0-100)
-        left_speed = max(0, min(100, left_speed))
-        right_speed = max(0, min(100, right_speed))
+        calibrated_left = max(0, min(100, calibrated_left))
+        calibrated_right = max(0, min(100, calibrated_right))
         
         # Apply speeds
-        self.pwm_left.ChangeDutyCycle(left_speed)
-        self.pwm_right.ChangeDutyCycle(right_speed)
+        self.pwm_left.ChangeDutyCycle(calibrated_left)
+        self.pwm_right.ChangeDutyCycle(calibrated_right)
         
         # If any motor is running, set running state to True
         self.running = (left_speed > 0 or right_speed > 0)
@@ -87,29 +95,39 @@ class PiCar:
         
         return self  # Enable method chaining
     
-    def turn_left(self, turn_factor=0.5):
+    def turn_left(self, turn_factor=0.8):
         """
-        Turn the car left by reducing the left motor speed
-        turn_factor: 0.0 to 1.0, where 1.0 means the left wheel stops completely
+        Turn the car left with enhanced turning
+        turn_factor: 0.0 to 1.0 controls how sharp the turn is (higher = sharper)
         """
-        # Calculate the left motor speed reduction
-        left_speed = self.speed * (1 - turn_factor)
+        # Get current direction flags
+        current_direction_left = GPIO.input(IN1)
+        current_direction_right = GPIO.input(IN3)
         
-        # Apply the speeds (direction pins remain unchanged)
-        self.set_motor_speeds(left_speed, self.speed)
+        # Calculate motor speeds for more aggressive turning
+        left_speed = self.speed * (1 - turn_factor)  # Reduce left motor significantly
+        right_speed = min(100, self.speed * 1.2)     # Boost right motor slightly
+        
+        # Maintain current direction while changing speeds
+        self.set_motor_speeds(left_speed, right_speed)
         
         return self  # Enable method chaining
     
-    def turn_right(self, turn_factor=0.5):
+    def turn_right(self, turn_factor=0.8):
         """
-        Turn the car right by reducing the right motor speed
-        turn_factor: 0.0 to 1.0, where 1.0 means the right wheel stops completely
+        Turn the car right with enhanced turning
+        turn_factor: 0.0 to 1.0 controls how sharp the turn is (higher = sharper)
         """
-        # Calculate the right motor speed reduction
-        right_speed = self.speed * (1 - turn_factor)
+        # Get current direction flags
+        current_direction_left = GPIO.input(IN1)
+        current_direction_right = GPIO.input(IN3)
         
-        # Apply the speeds (direction pins remain unchanged)
-        self.set_motor_speeds(self.speed, right_speed)
+        # Calculate motor speeds for more aggressive turning
+        left_speed = min(100, self.speed * 1.2)      # Boost left motor slightly
+        right_speed = self.speed * (1 - turn_factor)  # Reduce right motor significantly
+        
+        # Maintain current direction while changing speeds
+        self.set_motor_speeds(left_speed, right_speed)
         
         return self  # Enable method chaining
     
@@ -137,35 +155,37 @@ class PiCar:
         
         return self  # Enable method chaining
     
-    def change_lane_left(self, turn_factor=0.7, duration=0.5):
+    def change_lane_left(self, turn_factor=0.8, duration=0.5):
         """Perform a lane change to the left"""
-        # Remember the current direction
+        # Store current direction
         left_forward = GPIO.input(IN1) == GPIO.HIGH
         right_forward = GPIO.input(IN3) == GPIO.HIGH
         
-        # Quick left turn
+        # Apply left turn
+        original_speed = self.speed
         self.turn_left(turn_factor)
         time.sleep(duration)
         
-        # Return to original direction and speed
+        # Restore original direction and speed
         self.set_motor_directions(left_forward, right_forward)
-        self.set_motor_speeds(self.speed, self.speed)
+        self.set_motor_speeds(original_speed, original_speed)
         
         return self  # Enable method chaining
     
-    def change_lane_right(self, turn_factor=0.7, duration=0.5):
+    def change_lane_right(self, turn_factor=0.8, duration=0.5):
         """Perform a lane change to the right"""
-        # Remember the current direction
+        # Store current direction
         left_forward = GPIO.input(IN1) == GPIO.HIGH
         right_forward = GPIO.input(IN3) == GPIO.HIGH
         
-        # Quick right turn
+        # Apply right turn
+        original_speed = self.speed
         self.turn_right(turn_factor)
         time.sleep(duration)
         
-        # Return to original direction and speed
+        # Restore original direction and speed
         self.set_motor_directions(left_forward, right_forward)
-        self.set_motor_speeds(self.speed, self.speed)
+        self.set_motor_speeds(original_speed, original_speed)
         
         return self  # Enable method chaining
     
@@ -196,7 +216,9 @@ class PiCar:
 
 # Example usage
 if __name__ == "__main__":
-    car = PiCar(default_speed=1)  # Create car with 70% speed
+    # You can adjust these bias values if one motor is stronger than the other
+    # Example: car = PiCar(default_speed=70, left_bias=1.1, right_bias=0.9)
+    car = PiCar(default_speed=70)
     
     try:
         print("Testing PiCar functionality...")
@@ -205,33 +227,41 @@ if __name__ == "__main__":
         car.forward()
         time.sleep(2)
         
+        print("Testing left turn...")
+        car.forward().turn_left(0.8)  # Higher turn_factor for sharper turn
+        time.sleep(2)
+        
+        print("Testing right turn...")
+        car.forward().turn_right(0.8)  # Higher turn_factor for sharper turn
+        time.sleep(2)
+        
         print("Moving backward...")
         car.backward()
         time.sleep(2)
         
-        # print("Turning left...")
-        # car.forward().turn_left(0.6)  # Demonstrating method chaining
-        # time.sleep(2)
+        print("Testing left turn while moving backward...")
+        car.backward().turn_left(0.8)
+        time.sleep(2)
         
-        # print("Turning right...")
-        # car.forward().turn_right(0.6)
-        # time.sleep(2)
+        print("Testing right turn while moving backward...")
+        car.backward().turn_right(0.8)
+        time.sleep(2)
         
-        print("Spinning left...")
+        print("Testing spin left...")
         car.spin_left()
         time.sleep(2)
         
-        print("Spinning right...")
+        print("Testing spin right...")
         car.spin_right()
         time.sleep(2)
         
-        # print("Changing to left lane...")
-        # car.forward().change_lane_left()
-        # time.sleep(1)
+        print("Testing left lane change...")
+        car.forward().change_lane_left(0.9, 1.0)  # Sharper turn, longer duration
+        time.sleep(2)
         
-        # print("Changing to right lane...")
-        # car.forward().change_lane_right()
-        # time.sleep(1)
+        print("Testing right lane change...")
+        car.forward().change_lane_right(0.9, 1.0)  # Sharper turn, longer duration
+        time.sleep(2)
         
         print("All tests completed!")
         
