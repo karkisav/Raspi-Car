@@ -286,22 +286,22 @@ def run_test_sequence():
         
         # Example of manual commands
         print("\nRunning manual command sequence:")
-        car.forward(speed=100, duration=2)
+        # car.forward(speed=100, duration=2)
         # car.left(duration=0.5)
-        # # car.forward(duration=1)
+        # car.forward(duration=1)
         # car.right(duration=1)
         # car.backward(speed=30, duration=2)
-        car.stop()
+        # car.stop()
         time.sleep(1)
         
         # Example of command list
         print("\nRunning command list:")
         commands = [
-            {'command': 'forward', 'speed': 50, 'duration': 2},
+            # {'command': 'forward', 'speed': 50, 'duration': 2},
             {'command': 'left', 'duration': 1},
-            {'command': 'forward', 'speed': 70, 'duration': 1.5},
+            # {'command': 'forward', 'speed': 70, 'duration': 1.5},
             {'command': 'right', 'duration': 1},
-            {'command': 'backward', 'speed': 40, 'duration': 2},
+            # {'command': 'backward', 'speed': 40, 'duration': 2},
             {'command': 'stop', 'duration': 1}
         ]
         car.execute_commands(commands)
