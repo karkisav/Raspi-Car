@@ -3,14 +3,14 @@ import time
 
 # GPIO pin setup
 # Motor A (left side)
-ENB = 12  # PWM pin for controlling speed
-IN3 = 23  # Direction control
-IN4 = 22  # Direction control
+ENA = 12  # PWM pin for controlling speed
+IN1 = 22  # Direction control
+IN2 = 23  # Direction control
 
 # Motor B (right side)
-ENA = 13  # PWM pin for controlling speed
-IN1 = 18  # Direction control
-IN2 = 17  # Direction control
+ENB = 13  # PWM pin for controlling speed
+IN3 = 17  # Direction control
+IN4 = 18  # Direction control
 
 class PiCar:
     def __init__(self, default_speed=70, left_bias=1.0, right_bias=1.0):
