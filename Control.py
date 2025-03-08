@@ -231,9 +231,9 @@ if __name__ == "__main__":
         car.forward().turn_left(0.8)  # Higher turn_factor for sharper turn
         time.sleep(2)
         
-        # print("Testing right turn...")
-        # car.forward().turn_right(0.8)  # Higher turn_factor for sharper turn
-        # time.sleep(2)
+        print("Testing right turn...")
+        car.forward().turn_right(0.8)  # Higher turn_factor for sharper turn
+        time.sleep(2)
         
         # print("Moving backward...")
         # car.backward()
