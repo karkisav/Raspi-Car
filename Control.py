@@ -91,7 +91,7 @@ class PiCar:
         pwm_a.ChangeDutyCycle(0)
         pwm_b.ChangeDutyCycle(0)
 
-    def cleanup():
+    def cleanup(self):
         # Clean up GPIO
         pwm_a.stop()
         pwm_b.stop()
@@ -129,8 +129,7 @@ if __name__ == "__main__":
         print("Stopping program")
 
     finally:
+        car.stop()
         car.cleanup()
         print("Clean up done: GPIO Pins are fresh now")
-        car.stop
-        pwm_a.start(0)
-        pwm_b.start(0)
+    
