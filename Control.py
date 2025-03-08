@@ -113,12 +113,12 @@ if __name__ == "__main__":
 
         print("Turning right ...")
         car.turn_left()
-        time.sleep(5)
+        time.sleep(1)
         print("Done !!!")
 
         print("Changing lane To left lane")
         car.change_lane_left()
-        time.sleep(5)
+        time.sleep(1)
         print("Done !!!")
 
         print("All tests done now !!")
