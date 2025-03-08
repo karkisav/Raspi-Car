@@ -64,12 +64,12 @@ class PiCar:
         pwm_b.ChangeDutyCycle(self.speed)
 
 
-    def turn_left(self, turn_speed = 1):
+    def turn_left(self, turn_speed = 5):
         # Slow down left side, maintain right side
         pwm_a.ChangeDutyCycle(self.speed - turn_speed)
         pwm_b.ChangeDutyCycle(self.speed)
 
-    def turn_right(self, turn_speed = 1):
+    def turn_right(self, turn_speed = 5):
         # Maintian down left side, slow down right side
         pwm_a.ChangeDutyCycle(self.speed)
         pwm_b.ChangeDutyCycle(self.speed - turn_speed)
@@ -113,12 +113,12 @@ if __name__ == "__main__":
 
         print("Turning right ...")
         car.turn_left()
-        time.sleep(2)
+        time.sleep(5)
         print("Done !!!")
 
         print("Changing lane To left lane")
         car.change_lane_left()
-        time.sleep(2)
+        time.sleep(5)
         print("Done !!!")
 
         print("All tests done now !!")
