@@ -35,7 +35,7 @@ pwm_b.start(0)
 
 class PiCar:
     def __init__(self):
-        self.speed = 10
+        self.speed = 50
 
     def forward(self, speed = None):
         if speed is not None:
