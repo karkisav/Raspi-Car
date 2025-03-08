@@ -5,14 +5,14 @@ import time
 
 # GPIO pin setup
 # Motor A (left side)
-ENA = 21  # PWM pin for controlling speed
-IN1 = 20  # Direction control
-IN2 = 16  # Direction control
+ENA = 12  # PWM pin for controlling speed
+IN1 = 23  # Direction control
+IN2 = 22  # Direction control
 
 # Motor B (right side)
 ENB = 13  # PWM pin for controlling speed
-IN3 = 26  # Direction control
-IN4 = 19  # Direction control
+IN3 = 18  # Direction control
+IN4 = 17  # Direction control
 
 # Initialize GPIO
 GPIO.setmode(GPIO.BCM)
