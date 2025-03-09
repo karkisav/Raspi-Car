@@ -8,3 +8,8 @@
 ```chmod +x keyboard_control.py```
 ```python3 keyboard_control.py```
 
+
+### Requirements
+```pip3 install opencv-python```
+```pip3 install numpy```
+
