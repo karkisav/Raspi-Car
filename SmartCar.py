@@ -3,7 +3,7 @@ import cv2
 import numpy as np
 import time
 import sys
-from paste import Car  # Import the Car class from your existing file
+from car_control import Car  # Import the Car class from your existing file
 
 # Check if running on Raspberry Pi
 try:
