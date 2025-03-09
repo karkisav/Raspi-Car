@@ -1,6 +1,8 @@
 import curses
 import time
 import sys
+import os
+from datetime import datetime
 from car_control import Car  # Importing from your existing file
 from lane_detection import LaneDetector  # Import the lane detection module
 
@@ -36,8 +38,16 @@ def main(stdscr):
     auto_mode = False
     
     # Auto mode settings
-    auto_straight_speed = 15  # Lower speed for auto mode
-    auto_turn_sensitivity = 0.7  # How sensitive the turning is to deviation
+    auto_straight_speed = 18  # Moderate speed for auto mode
+    auto_turn_sensitivity = 1.2  # Increased sensitivity for more responsive turning
+    
+    # Create log directory for debugging
+    log_dir = "/tmp/car_logs"
+    os.makedirs(log_dir, exist_ok=True)
+    
+    # Initialize log file
+    with open(f"{log_dir}/session.log", "w") as f:
+        f.write(f"Session started at {datetime.now()}\n")
     
     # Instructions
     instructions = [
@@ -140,25 +150,55 @@ def main(stdscr):
             if auto_mode:
                 deviation = lane_detector.get_deviation()
                 
-                # Apply steering based on lane deviation
-                if abs(deviation) < 0.1:
+                # More aggressive turning response - decrease the threshold and increase sensitivity
+                if abs(deviation) < 0.05:  # Smaller threshold for straight
                     # Going straight
                     car.forward(speed=auto_straight_speed)
                     current_direction = "Auto-Straight"
                 elif deviation < 0:
                     # Need to turn right (negative deviation)
-                    turn_amount = min(abs(deviation) * auto_turn_sensitivity, 1.0)
-                    right_speed = int(turn_speed * turn_amount)
-                    car.right(speed=right_speed)
+                    # More aggressive turn response
+                    turn_amount = min(abs(deviation) * auto_turn_sensitivity * 2.0, 1.0)
+                    right_speed = max(int(turn_speed * turn_amount), 15)  # Ensure minimum turn speed
+                    
+                    # Force a sharper turn by stopping forward motion if deviation is significant
+                    if abs(deviation) > 0.3:
+                        car.stop()  # Brief stop to make turning more effective
+                        time.sleep(0.05)
+                        car.right(speed=right_speed)
+                    else:
+                        # Combining forward motion with turning for slight corrections
+                        car.forward(speed=auto_straight_speed//2)  # Slow down while turning
+                        time.sleep(0.05)
+                        car.right(speed=right_speed)
+                    
                     current_direction = f"Auto-Right ({right_speed})"
+                    # Log the turn command for debugging
+                    with open("/tmp/car_debug.log", "a") as f:
+                        f.write(f"Time: {time.time()}, Turn RIGHT, Deviation: {deviation:.2f}, Speed: {right_speed}\n")
                 else:
                     # Need to turn left (positive deviation)
-                    turn_amount = min(abs(deviation) * auto_turn_sensitivity, 1.0)
-                    left_speed = int(turn_speed * turn_amount)
-                    car.left(speed=left_speed)
-                    current_direction = f"Auto-Left ({left_speed})"
+                    # More aggressive turn response
+                    turn_amount = min(abs(deviation) * auto_turn_sensitivity * 2.0, 1.0)
+                    left_speed = max(int(turn_speed * turn_amount), 15)  # Ensure minimum turn speed
                     
-                # Show deviation in UI
+                    # Force a sharper turn by stopping forward motion if deviation is significant
+                    if abs(deviation) > 0.3:
+                        car.stop()  # Brief stop to make turning more effective
+                        time.sleep(0.05)
+                        car.left(speed=left_speed)
+                    else:
+                        # Combining forward motion with turning for slight corrections
+                        car.forward(speed=auto_straight_speed//2)  # Slow down while turning
+                        time.sleep(0.05)
+                        car.left(speed=left_speed)
+                    
+                    current_direction = f"Auto-Left ({left_speed})"
+                    # Log the turn command for debugging
+                    with open("/tmp/car_debug.log", "a") as f:
+                        f.write(f"Time: {time.time()}, Turn LEFT, Deviation: {deviation:.2f}, Speed: {left_speed}\n")
+                    
+                # Show deviation in UI and log it
                 stdscr.addstr(len(instructions), 0, f"Lane deviation: {deviation:.2f}", 
                              curses.color_pair(1 if abs(deviation) < 0.3 else 2))
             
