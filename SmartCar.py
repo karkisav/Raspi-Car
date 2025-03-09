@@ -1,4 +1,3 @@
-#!/usr/bin/env python3
 import cv2
 import numpy as np
 import time
@@ -33,21 +32,21 @@ class LaneDetector:
                 raise Exception("Could not open camera/video stream")
         
         # Parameters for lane detection
-        self.yellow_lower = np.array([20, 100, 100], dtype=np.uint8)  # HSV range for yellow
-        self.yellow_upper = np.array([40, 255, 255], dtype=np.uint8)
+        self.yellow_lower = np.array([20, 0, 100], dtype=np.uint8)  # HSV range for yellow
+        self.yellow_upper = np.array([70, 255, 255], dtype=np.uint8)
         
         # Lane following parameters
         self.frame_center_x = 320  # Assuming 640x480 resolution
         self.target_x = self.frame_center_x  # Where we want the lane center to be
         self.error_threshold = 60  # Acceptable error in pixels
         self.lane_history = []  # To store recent lane positions for smoothing
-        self.history_size = 5
+        self.history_size = 10
         
         # Control parameters
-        self.max_speed = 40  # Maximum speed (0-100)
-        self.turn_speed = 30  # Speed during turns
+        self.max_speed = 20  # Maximum speed (0-100)
+        self.turn_speed = 15  # Speed during turns
         self.pid = {
-            'Kp': 0.5,  # Proportional gain
+            'Kp': 1.5,  # Proportional gain
             'Ki': 0.05,  # Integral gain
             'Kd': 0.1,   # Derivative gain
             'integral': 0,
