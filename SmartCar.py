@@ -151,20 +151,24 @@ class LaneDetector:
         # Normalize steering to -1 (full left) to 1 (full right)
         normalized_steering = max(min(steering / 100, 1), -1)
         
-        # Determine speed and direction based on steering
+        # Increase steering sensitivity
+        normalized_steering = normalized_steering * 1.5  # Amplify steering effect
+        normalized_steering = max(min(normalized_steering, 1), -1)  # Reclamp
+        
+        # Use more aggressive turning
         if abs(normalized_steering) < 0.2:
-            # Going mostly straight - full speed ahead
+            # Going straight
             car.left_motor.set_target_speed(self.max_speed)
             car.right_motor.set_target_speed(self.max_speed)
         elif normalized_steering > 0:
-            # Turn right - slow down right wheel
-            right_speed = self.max_speed * (1 - abs(normalized_steering))
+            # Turn right - possibly stop or reverse right wheel for sharp turns
+            right_speed = self.max_speed * (1 - abs(normalized_steering) * 2)  # More reduction
             car.left_motor.set_target_speed(self.max_speed)
-            car.right_motor.set_target_speed(max(0, right_speed))
+            car.right_motor.set_target_speed(right_speed)  # Could go negative for sharper turns
         else:
-            # Turn left - slow down left wheel
-            left_speed = self.max_speed * (1 - abs(normalized_steering))
-            car.left_motor.set_target_speed(max(0, left_speed))
+            # Turn left - possibly stop or reverse left wheel for sharp turns
+            left_speed = self.max_speed * (1 - abs(normalized_steering) * 2)  # More reduction
+            car.left_motor.set_target_speed(left_speed)  # Could go negative for sharper turns
             car.right_motor.set_target_speed(self.max_speed)
         
     def cleanup(self):
